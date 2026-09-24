@@ -1,8 +1,11 @@
-/vendor/
-node_modules/
-/js/node_modules/
+vendor
+composer.phar
 composer.lock
+.DS_Store
+Thumbs.db
+node_modules
+js/node_modules
+.idea
 .phpunit.result.cache
 phpunit.phar
-.DS_Store
 *.log
