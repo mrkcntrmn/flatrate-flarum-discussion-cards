@@ -12,12 +12,30 @@ class FollowingPage extends IndexPage {}
 class UserPage {}
 class TagPage extends IndexPage {}
 
+/**
+ * Flarum PageState.matches(Component) — not instanceof on the component.
+ * @param {unknown} activeClass
+ */
+function pageState(activeClass) {
+  return {
+    matches(pageClass) {
+      if (!activeClass || !pageClass) return false;
+      let proto = activeClass;
+      while (proto) {
+        if (proto === pageClass) return true;
+        proto = Object.getPrototypeOf(proto);
+      }
+      return false;
+    },
+  };
+}
+
 test('IndexPage + gate + no search -> cards', () => {
   assert.equal(
     isCardSurface({
       gateEnabled: true,
       state: { params: {} },
-      page: new IndexPage(),
+      page: pageState(IndexPage),
       IndexPage,
     }),
     true
@@ -29,12 +47,12 @@ test('FollowingPage subclass of IndexPage + gate -> cards', () => {
     isCardSurface({
       gateEnabled: true,
       state: { params: {} },
-      page: new FollowingPage(),
+      page: pageState(FollowingPage),
       IndexPage,
     }),
     true
   );
-  assert.equal(pageIsFullFeedSurface(new FollowingPage(), IndexPage), true);
+  assert.equal(pageIsFullFeedSurface(pageState(FollowingPage), IndexPage), true);
 });
 
 test('tag board IndexPage subclass + gate -> cards', () => {
@@ -42,7 +60,7 @@ test('tag board IndexPage subclass + gate -> cards', () => {
     isCardSurface({
       gateEnabled: true,
       state: { params: {} },
-      page: new TagPage(),
+      page: pageState(TagPage),
       IndexPage,
     }),
     true
@@ -54,7 +72,7 @@ test('search query excludes cards on IndexPage', () => {
     isCardSurface({
       gateEnabled: true,
       state: { params: { q: 'warranty' } },
-      page: new IndexPage(),
+      page: pageState(IndexPage),
       IndexPage,
     }),
     false
@@ -68,7 +86,7 @@ test('profile / non-IndexPage surfaces are excluded', () => {
     isCardSurface({
       gateEnabled: true,
       state: { params: {} },
-      page: new UserPage(),
+      page: pageState(UserPage),
       IndexPage,
     }),
     false
@@ -80,14 +98,14 @@ test('gate false excludes cards even on IndexPage', () => {
     isCardSurface({
       gateEnabled: false,
       state: { params: {} },
-      page: new IndexPage(),
+      page: pageState(IndexPage),
       IndexPage,
     }),
     false
   );
 });
 
-test('missing page fails closed', () => {
+test('missing page or matches() fails closed', () => {
   assert.equal(
     isCardSurface({
       gateEnabled: true,
@@ -97,4 +115,11 @@ test('missing page fails closed', () => {
     }),
     false
   );
+  assert.equal(pageIsFullFeedSurface({}, IndexPage), false);
+  assert.equal(pageIsFullFeedSurface({ matches: () => true }, null), false);
+});
+
+test('raw component instance is not treated as a page surface', () => {
+  // Guards the v0.1.0 regression: app.current is PageState, not IndexPage.
+  assert.equal(pageIsFullFeedSurface(new IndexPage(), IndexPage), false);
 });
