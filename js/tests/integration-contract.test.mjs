@@ -57,12 +57,12 @@ test('initializer always registers; gate is runtime-only', () => {
 });
 
 test('byline has no nested profile link markup', () => {
-  const byline = read('js/src/forum/components/DiscussionCardByline.js');
-  assert.ok(byline.includes("import username from 'flarum/common/helpers/username'"));
-  assert.equal(byline.includes('<a '), false);
-  assert.equal(byline.includes('app.route.user'), false);
-  assert.equal(byline.includes('Member #'), false);
-  assert.equal(byline.includes('email'), false);
+  const addCards = read('js/src/forum/addDiscussionCards.js');
+  assert.ok(addCards.includes("import username from 'flarum/common/helpers/username'"));
+  assert.equal(addCards.includes('<a '), false);
+  assert.equal(addCards.includes('app.route.user'), false);
+  assert.equal(addCards.includes('Member #'), false);
+  assert.equal(addCards.includes('email'), false);
 });
 
 test('LESS is scoped to card class only', () => {
