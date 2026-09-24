@@ -4,13 +4,13 @@ import DiscussionListItem from 'flarum/forum/components/DiscussionListItem';
 import DiscussionListState from 'flarum/forum/states/DiscussionListState';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import classList from 'flarum/common/utils/classList';
+import username from 'flarum/common/helpers/username';
+import humanTime from 'flarum/common/utils/humanTime';
 
 import { discussionCardsEnabled } from './rolloutGate';
 import { isCardSurface } from './utils/cardSurface';
 import { ensureFirstPostInclude } from './utils/ensureFirstPostInclude';
 import { resolveCardExcerpt } from './utils/excerpt';
-import DiscussionCardByline from './components/DiscussionCardByline';
-import DiscussionCardExcerpt from './components/DiscussionCardExcerpt';
 
 /**
  * Runtime card activation. Gate + full-feed surface + not search.
@@ -31,6 +31,31 @@ function cardsActive(stateOrParamsHost) {
     page: app.current || null,
     IndexPage,
   });
+}
+
+/**
+ * Inline byline vnode (Mithril ItemList expects real vnodes; Sticky uses the same pattern).
+ *
+ * @param {any} discussion
+ */
+function bylineVnode(discussion) {
+  const user = typeof discussion.user === 'function' ? discussion.user() : null;
+  const createdAt = typeof discussion.createdAt === 'function' ? discussion.createdAt() : null;
+
+  return (
+    <div className="DiscussionListItem-flatRateByline">
+      <span className="DiscussionListItem-flatRateByline-author">{username(user)}</span>
+      {createdAt ? (
+        <span>
+          <span className="DiscussionListItem-flatRateByline-sep" aria-hidden="true">
+            {' '}
+            ·{' '}
+          </span>
+          <span className="DiscussionListItem-flatRateByline-time">{humanTime(createdAt)}</span>
+        </span>
+      ) : null}
+    </div>
+  );
 }
 
 /**
@@ -75,10 +100,16 @@ export default function addDiscussionCards() {
       return;
     }
 
-    items.add('flatRateCardByline', <DiscussionCardByline discussion={discussion} />, 110);
+    // Real vnodes only (Sticky documents this for DiscussionListItem ItemLists).
+    items.add('flatRateCardByline', bylineVnode(discussion), 110);
 
-    if (resolveCardExcerpt(discussion)) {
-      items.add('flatRateCardExcerpt', <DiscussionCardExcerpt discussion={discussion} />, 95);
+    const excerpt = resolveCardExcerpt(discussion);
+    if (excerpt) {
+      items.add(
+        'flatRateCardExcerpt',
+        <div className="DiscussionListItem-flatRateExcerpt">{excerpt}</div>,
+        95
+      );
     }
   });
 }
