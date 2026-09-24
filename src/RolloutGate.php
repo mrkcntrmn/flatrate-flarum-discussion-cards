@@ -41,6 +41,10 @@ final class RolloutGate
      * Admin  -> ADMIN_PREVIEW only
      * Guest  -> GUEST_ENABLED only
      * Member -> MEMBER_ENABLED only
+     *
+     * Moderators who are not administrators follow the member gate
+     * (MODERATOR_IS_NOT_IMPLICIT_ADMIN). Do not infer Admin from
+     * moderation permission, group label, DOM, URL, or local storage.
      */
     public static function enabledForActor(
         bool $isAdmin,
@@ -57,6 +61,8 @@ final class RolloutGate
             return self::parse($guestEnabled);
         }
 
+        // Ordinary members, non-admin moderators, and any other authenticated
+        // non-admin role share the member gate.
         return self::parse($memberEnabled);
     }
 }
