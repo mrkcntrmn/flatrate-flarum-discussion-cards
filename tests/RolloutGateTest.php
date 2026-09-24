@@ -39,12 +39,29 @@ class RolloutGateTest extends TestCase
             'member all off' => [false, false, '0', '0', '0', false],
             'member guest on' => [false, false, '0', '0', '1', false],
 
+            // Non-admin moderators use the member path (isAdmin=false, isGuest=false).
+            'moderator non-admin admin preview only' => [false, false, '1', '0', '0', false],
+            'moderator non-admin member enabled' => [false, false, '0', '1', '0', true],
+
             'guest admin preview only' => [true, true, '1', '0', '0', true], // isAdmin wins before guest
             'guest enabled' => [false, true, '0', '0', '1', true],
             'guest member on' => [false, true, '0', '1', '0', false],
             'guest admin preview only non-admin' => [false, true, '1', '0', '0', false],
             'guest all off' => [false, true, '0', '0', '0', false],
         ];
+    }
+
+    public function testModeratorNonAdminDoesNotInheritAdminPreview(): void
+    {
+        // Explicit contract: moderation capability alone never grants Admin preview.
+        $this->assertFalse(
+            RolloutGate::enabledForActor(false, false, '1', '0', '0'),
+            'moderator non-admin with admin_preview=1 must remain false'
+        );
+        $this->assertTrue(
+            RolloutGate::enabledForActor(false, false, '0', '1', '0'),
+            'moderator non-admin follows member gate when member_enabled=1'
+        );
     }
 
     public function testParseFailClosed(): void
