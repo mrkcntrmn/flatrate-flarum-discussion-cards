@@ -3,13 +3,14 @@ flatrate-discussion-cards:
     settings:
       admin_preview_label: Admin preview
       admin_preview_help: >
-        Safe live canary. Show discussion cards only to administrators.
-        Installing this extension does not enable Admin preview automatically.
-      member_enabled_label: Enable cards for members
+        Show the new discussion-card presentation to Administrators only.
+        Installing or enabling this extension does not turn Admin preview on.
+      member_enabled_label: Enable discussion cards for members
       member_enabled_help: >
-        Show discussion cards to signed-in non-admin members.
-        Requires separate owner authorization.
-      guest_enabled_label: Enable cards for guests / public
+        Show discussion cards to authenticated non-admin users
+        (including moderators who are not Administrators).
+        DO NOT ENABLE without new owner authorization.
+      guest_enabled_label: Enable discussion cards for guests / public
       guest_enabled_help: >
         Show discussion cards to signed-out visitors.
-        Requires separate owner authorization.
+        DO NOT ENABLE without new owner authorization.
