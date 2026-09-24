@@ -23,6 +23,8 @@ function cardsActive(stateOrParamsHost) {
     return false;
   }
 
+  // app.current is a PageState; cardSurface uses page.matches(IndexPage).
+  // Runtime: app.current is Flarum PageState — cardSurface uses matches(IndexPage).
   return isCardSurface({
     gateEnabled: true,
     state: stateOrParamsHost,
