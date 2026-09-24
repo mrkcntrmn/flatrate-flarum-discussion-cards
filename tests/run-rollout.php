@@ -48,6 +48,9 @@ $matrix = [
     [false, false, '0', '1', '0', true, 'member enabled'],
     [false, false, '0', '0', '0', false, 'member all off'],
     [false, false, '0', '0', '1', false, 'member guest on'],
+    // Non-admin moderators share the authenticated non-admin (member) path.
+    [false, false, '1', '0', '0', false, 'moderator non-admin admin preview only'],
+    [false, false, '0', '1', '0', true, 'moderator non-admin member enabled'],
     [false, true, '0', '0', '1', true, 'guest enabled'],
     [false, true, '0', '1', '0', false, 'guest member on'],
     [false, true, '1', '0', '0', false, 'guest admin preview only'],
