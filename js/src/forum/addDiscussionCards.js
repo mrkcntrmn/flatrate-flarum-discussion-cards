@@ -8,6 +8,7 @@ import classList from 'flarum/common/utils/classList';
 import { discussionCardsEnabled } from './rolloutGate';
 import { isCardSurface } from './utils/cardSurface';
 import { ensureFirstPostInclude } from './utils/ensureFirstPostInclude';
+import { resolveCardExcerpt } from './utils/excerpt';
 import DiscussionCardByline from './components/DiscussionCardByline';
 import DiscussionCardExcerpt from './components/DiscussionCardExcerpt';
 
@@ -24,7 +25,6 @@ function cardsActive(stateOrParamsHost) {
   }
 
   // app.current is a PageState; cardSurface uses page.matches(IndexPage).
-  // Runtime: app.current is Flarum PageState — cardSurface uses matches(IndexPage).
   return isCardSurface({
     gateEnabled: true,
     state: stateOrParamsHost,
@@ -47,7 +47,7 @@ export default function addDiscussionCards() {
       return;
     }
 
-    // Mutate include only; never alter filter/sort/page/q.
+    // Mutate include only; never alter filter/sort/page/q. Dedupe firstPost.
     params.include = ensureFirstPostInclude(params.include);
   });
 
@@ -76,6 +76,9 @@ export default function addDiscussionCards() {
     }
 
     items.add('flatRateCardByline', <DiscussionCardByline discussion={discussion} />, 110);
-    items.add('flatRateCardExcerpt', <DiscussionCardExcerpt discussion={discussion} />, 95);
+
+    if (resolveCardExcerpt(discussion)) {
+      items.add('flatRateCardExcerpt', <DiscussionCardExcerpt discussion={discussion} />, 95);
+    }
   });
 }

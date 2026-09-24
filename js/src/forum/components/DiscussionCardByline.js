@@ -4,8 +4,11 @@ import humanTime from 'flarum/common/utils/humanTime';
 /**
  * Non-interactive creator · time byline inside the native discussion main link.
  * Must not contain nested <a> elements.
+ *
+ * Mithril function components receive a vnode; attrs live on vnode.attrs.
  */
-export default function DiscussionCardByline({ discussion }) {
+export default function DiscussionCardByline(vnode) {
+  const discussion = vnode && vnode.attrs && vnode.attrs.discussion;
   if (!discussion) {
     return null;
   }
