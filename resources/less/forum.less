@@ -1,16 +1,16 @@
 // Card presentation only — never restyle native DiscussionListItem rows.
 .DiscussionListItem--flatRateCard {
-  --flatRate-card-radius: 14px;
+  --flatRate-card-radius: 16px;
   --flatRate-card-gap: 10px;
   --flatRate-card-gutter: 10px;
+  --flatRate-card-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 
   margin: 0 var(--flatRate-card-gutter) var(--flatRate-card-gap);
-  padding: 12px 12px 10px;
+  padding: 12px 12px 11px;
+  border: 0;
   border-radius: var(--flatRate-card-radius);
   background: var(--control-bg);
-  box-shadow: none;
-  // Avoid fade(var(--muted-color)) — Less cannot fade CSS custom properties.
-  border: 1px solid var(--control-color, transparent);
+  box-shadow: var(--flatRate-card-shadow);
 
   .DiscussionListItem-content {
     display: grid;
@@ -63,7 +63,7 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
     min-width: 0;
   }
 
@@ -78,20 +78,21 @@
 
     .username {
       color: var(--heading-color);
-      font-weight: 600;
+      font-weight: 650;
     }
   }
 
   .DiscussionListItem-title {
-    font-size: 16px;
-    line-height: 1.3;
+    font-size: 17px;
+    line-height: 1.28;
+    font-weight: 650;
     color: var(--discussion-title-color, var(--heading-color));
     margin: 0;
   }
 
   .DiscussionListItem-flatRateExcerpt {
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.45;
     color: var(--muted-color);
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -104,18 +105,47 @@
   .DiscussionListItem-info {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 6px 10px;
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
     font-size: 12px;
     color: var(--muted-color);
-    margin-top: 2px;
+    margin-top: 3px;
 
     > li {
       display: inline-flex;
       align-items: center;
       max-width: 100%;
+    }
+
+    // The first sorted tag is the primary board context in Flarum Tags.
+    // Give it enough visual weight that a Brand board (Honda, Toyota, etc.)
+    // is obvious while keeping secondary context such as Job Breakdown intact.
+    > .item-tags {
+      margin-right: 2px;
+
+      .TagsLabel {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .TagLabel {
+        border-radius: 999px !important;
+        padding: 0.18em 0.55em;
+        line-height: 1.35;
+      }
+
+      .TagLabel:first-child {
+        padding: 0.3em 0.72em;
+        font-size: 13px;
+        font-weight: 750;
+        letter-spacing: 0.01em;
+        background: var(--tag-bg, var(--body-bg));
+        color: var(--tag-color, var(--heading-color));
+      }
     }
   }
 
@@ -131,8 +161,8 @@
   .DiscussionListItem-controls {
     display: block;
     position: absolute;
-    top: 4px;
-    right: 4px;
+    top: 2px;
+    right: 2px;
     z-index: 2;
     opacity: 1;
 
@@ -142,6 +172,17 @@
       justify-content: center;
       min-width: 44px;
       min-height: 44px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      box-shadow: none;
+      color: var(--muted-color);
+
+      &:hover,
+      &:focus-visible {
+        background: var(--body-bg);
+        color: var(--heading-color);
+      }
     }
   }
 
@@ -154,7 +195,7 @@
   @media @phone {
     margin-left: 8px;
     margin-right: 8px;
-    padding: 10px;
+    padding: 11px 10px 10px;
 
     .DiscussionListItem-content {
       padding-left: 0;
@@ -166,8 +207,8 @@
     }
 
     .DiscussionListItem-main {
-      margin-right: 36px;
-      padding-right: 8px;
+      margin-right: 34px;
+      padding-right: 6px;
     }
 
     .DiscussionListItem-count {

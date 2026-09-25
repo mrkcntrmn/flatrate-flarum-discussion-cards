@@ -73,6 +73,22 @@ test('LESS is scoped to card class only', () => {
   assert.equal(/\n\.DiscussionListItem\s*\{/.test(withoutScoped), false);
 });
 
+test('card visual contract uses surface separation without perimeter outline', () => {
+  const less = read('resources/less/forum.less');
+  assert.ok(less.includes('border: 0;'));
+  assert.ok(less.includes('--flatRate-card-shadow:'));
+  assert.ok(less.includes('box-shadow: var(--flatRate-card-shadow);'));
+  assert.equal(less.includes('border: 1px solid var(--control-color'), false);
+});
+
+test('primary board tag is visually emphasized without deleting secondary tags', () => {
+  const less = read('resources/less/forum.less');
+  assert.ok(less.includes('> .item-tags'));
+  assert.ok(less.includes('.TagLabel:first-child'));
+  assert.ok(less.includes('background: var(--tag-bg, var(--body-bg));'));
+  assert.ok(less.includes('.TagsLabel'));
+});
+
 test('native main link remains the discussion route container', () => {
   const addCards = read('js/src/forum/addDiscussionCards.js');
   assert.equal(addCards.includes('app.route.discussion'), false);
