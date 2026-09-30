@@ -97,6 +97,9 @@ test('social feed cover contract is canonical and never scrapes rendered post HT
   assert.ok(social.includes("post.attribute('flatRateDiscussionCoverImageUrl')"));
   assert.ok(social.includes("url.hostname.toLowerCase() !== 'media.flatrate.wiki'"));
   assert.ok(extendPhp.includes('PostCoverImageAttribute::class'));
+  assert.ok(extendPhp.includes('BasicPostSerializer::class'));
+  assert.equal(extendPhp.includes('new Extend\\\\ApiSerializer(PostSerializer::class)'), false);
+  assert.ok(attr.includes('BasicPostSerializer'));
   assert.ok(attr.includes("'FoF\\\\Upload\\\\File'"));
   assert.ok(attr.includes("whereHas('posts'"));
   assert.equal(addCards.includes('contentHtml'), false);
