@@ -3,17 +3,21 @@
 namespace FlatRate\DiscussionCards\Api;
 
 use FlatRate\DiscussionCards\CoverImagePolicy;
-use Flarum\Api\Serializer\PostSerializer;
+use Flarum\Api\Serializer\BasicPostSerializer;
 use Flarum\Post\Post;
 
 /**
  * Serialize one optional first-post cover from FoF Upload's canonical
  * file<->post mapping. Fail closed when FoF Upload is absent or the mapping
  * cannot be resolved.
+ *
+ * Flarum 1.8 serializes Discussion::firstPost with BasicPostSerializer.
+ * PostSerializer extends that serializer, so this callback remains compatible
+ * with both list includes and full post serialization.
  */
 final class PostCoverImageAttribute
 {
-    public function __invoke(PostSerializer $serializer, Post $post, array $attributes): array
+    public function __invoke(BasicPostSerializer $serializer, Post $post, array $attributes): array
     {
         if ((int) $post->number !== 1) {
             return [];
