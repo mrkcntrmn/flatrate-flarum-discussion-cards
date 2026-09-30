@@ -4,9 +4,11 @@
  * Schema-free presentation extension. No migrations.
  */
 
+use Flarum\Api\Serializer\BasicPostSerializer;
 use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Extend;
 use FlatRate\DiscussionCards\Api\DiscussionCardsEnabledAttribute;
+use FlatRate\DiscussionCards\Api\PostCoverImageAttribute;
 use FlatRate\DiscussionCards\RolloutGate;
 
 return [
@@ -26,4 +28,9 @@ return [
 
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attributes(DiscussionCardsEnabledAttribute::class),
+
+    // Discussion::firstPost is serialized by BasicPostSerializer in Flarum 1.8.
+    // Mutators registered here also apply to PostSerializer subclasses.
+    (new Extend\ApiSerializer(BasicPostSerializer::class))
+        ->attributes(PostCoverImageAttribute::class),
 ];

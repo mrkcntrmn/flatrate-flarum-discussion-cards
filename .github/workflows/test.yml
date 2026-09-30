@@ -25,6 +25,12 @@ jobs:
           composer validate --strict
 
       - name: Install PHP dependencies
+        # Flarum 1.8 requires Flysystem 1.x. Composer 2.10 began blocking
+        # advisory-affected legacy dependencies during update by default.
+        # This source-validation lane must still resolve the production-pinned
+        # Flarum 1 stack; dependency-policy remediation is a separate upgrade.
+        env:
+          COMPOSER_POLICY_ADVISORIES_BLOCK: '0'
         run: composer update --no-interaction --prefer-dist
 
       - name: PHP syntax check

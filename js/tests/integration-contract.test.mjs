@@ -24,8 +24,14 @@ test('source uses approved seams only', () => {
   assert.ok(addCards.includes("extend(DiscussionListItem.prototype, 'elementAttrs'"));
   assert.ok(addCards.includes("extend(DiscussionListItem.prototype, 'mainItems'"));
   assert.ok(addCards.includes('DiscussionListItem--flatRateCard'));
-  assert.ok(addCards.includes('flatRateCardByline'));
+  assert.ok(addCards.includes('flatRateCardBoard'));
   assert.ok(addCards.includes('flatRateCardExcerpt'));
+  assert.ok(addCards.includes('flatRateCardCover'));
+  assert.ok(addCards.includes('flatRateCardByline'));
+  assert.ok(addCards.includes('flatRateCardLatestActivity'));
+  assert.ok(addCards.includes("extend(DiscussionListItem.prototype, 'infoItems'"));
+  assert.ok(addCards.includes("items.remove('terminalPost')"));
+  assert.ok(addCards.includes("items.setPriority('info', 10)"));
 });
 
 test('setting names and actor attribute are exact', () => {
@@ -78,4 +84,46 @@ test('native main link remains the discussion route container', () => {
   assert.equal(addCards.includes('app.route.discussion'), false);
   assert.equal(addCards.includes('mainView'), false);
   assert.equal(addCards.includes('getJumpTo'), false);
+});
+
+
+test('social feed cover contract is canonical and never scrapes rendered post HTML', () => {
+  const addCards = read('js/src/forum/addDiscussionCards.js');
+  const social = read('js/src/forum/utils/socialCard.js');
+  const extendPhp = read('extend.php');
+  const attr = read('src/Api/PostCoverImageAttribute.php');
+
+  assert.ok(addCards.includes('resolveCoverImageUrl'));
+  assert.ok(social.includes("post.attribute('flatRateDiscussionCoverImageUrl')"));
+  assert.ok(social.includes("url.hostname.toLowerCase() !== 'media.flatrate.wiki'"));
+  assert.ok(extendPhp.includes('PostCoverImageAttribute::class'));
+  assert.ok(extendPhp.includes('BasicPostSerializer::class'));
+  assert.equal(extendPhp.includes('new Extend\\\\ApiSerializer(PostSerializer::class)'), false);
+  assert.ok(attr.includes('BasicPostSerializer'));
+  assert.ok(attr.includes("'FoF\\\\Upload\\\\File'"));
+  assert.ok(attr.includes("whereHas('posts'"));
+  assert.equal(addCards.includes('contentHtml'), false);
+  assert.equal(addCards.includes('innerHTML'), false);
+  assert.equal(addCards.includes('querySelector'), false);
+});
+
+test('social hierarchy keeps original author distinct from latest activity', () => {
+  const addCards = read('js/src/forum/addDiscussionCards.js');
+  const social = read('js/src/forum/utils/socialCard.js');
+
+  assert.ok(addCards.includes('discussion.user'));
+  assert.ok(social.includes('discussion.lastPostedUser'));
+  assert.ok(social.includes('discussion.lastPostedAt'));
+  assert.ok(social.includes('discussion.replyCount'));
+});
+
+test('card visual contract remains scoped and supports optional 16:9 cover', () => {
+  const less = read('resources/less/forum.less');
+  assert.ok(less.includes('border: 0;'));
+  assert.ok(less.includes('.DiscussionListItem-flatRateBoard'));
+  assert.ok(less.includes('.DiscussionListItem-flatRateCover'));
+  assert.ok(less.includes('aspect-ratio: 16 / 9'));
+  assert.ok(less.includes('object-fit: cover'));
+  assert.ok(less.includes('min-width: 44px'));
+  assert.ok(less.includes('min-height: 44px'));
 });

@@ -1,29 +1,29 @@
-// Card presentation only — never restyle native DiscussionListItem rows.
+// FORUM-SOCIAL-FEED-002 — card presentation only.
+// Native DiscussionListItem rows stay untouched when the actor gate is false.
 .DiscussionListItem--flatRateCard {
-  --flatRate-card-radius: 14px;
+  --flatRate-card-radius: 16px;
   --flatRate-card-gap: 10px;
   --flatRate-card-gutter: 10px;
+  --flatRate-card-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 
   margin: 0 var(--flatRate-card-gutter) var(--flatRate-card-gap);
   padding: 12px 12px 10px;
+  border: 0;
   border-radius: var(--flatRate-card-radius);
   background: var(--control-bg);
-  box-shadow: none;
-  // Avoid fade(var(--muted-color)) — Less cannot fade CSS custom properties.
-  border: 1px solid var(--control-color, transparent);
+  box-shadow: var(--flatRate-card-shadow);
+  overflow: hidden;
 
   .DiscussionListItem-content {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto auto minmax(0, 1fr);
     grid-template-areas:
       "votes avatar main"
-      "votes .     count"
-      "votes .     .";
-    column-gap: 10px;
-    row-gap: 4px;
+      "votes . count";
+    column-gap: 9px;
+    row-gap: 3px;
     align-items: start;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
     position: relative;
   }
 
@@ -32,10 +32,10 @@
     position: static;
     left: auto;
     top: auto;
-    width: 36px;
+    width: 34px;
     height: auto;
     min-height: 42px;
-    margin-top: 2px;
+    margin-top: 1px;
     align-self: start;
   }
 
@@ -45,7 +45,7 @@
     position: static;
 
     .Avatar {
-      .Avatar--size(36px);
+      .Avatar--size(34px);
     }
   }
 
@@ -63,18 +63,68 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
     min-width: 0;
+    padding-right: 34px;
+  }
+
+  .DiscussionListItem-flatRateBoard {
+    margin: 0 0 1px;
+    color: var(--muted-color);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+  }
+
+  .DiscussionListItem-title {
+    margin: 0;
+    color: var(--discussion-title-color, var(--heading-color));
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.28;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .DiscussionListItem-flatRateExcerpt {
+    color: var(--muted-color);
+    font-size: 14px;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .DiscussionListItem-flatRateCover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin: 4px 0 3px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--body-bg);
+
+    > img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
   .DiscussionListItem-flatRateByline {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.35em;
-    font-size: 13px;
-    line-height: 1.3;
+    align-items: center;
+    gap: 0.32em;
+    min-height: 18px;
     color: var(--muted-color);
+    font-size: 12.5px;
+    line-height: 1.3;
 
     .username {
       color: var(--heading-color);
@@ -82,57 +132,85 @@
     }
   }
 
-  .DiscussionListItem-title {
-    font-size: 16px;
-    line-height: 1.3;
-    color: var(--discussion-title-color, var(--heading-color));
-    margin: 0;
+  .DiscussionListItem-flatRateByline--creator {
+    margin-top: 2px;
   }
 
-  .DiscussionListItem-flatRateExcerpt {
-    font-size: 14px;
-    line-height: 1.4;
+  .DiscussionListItem-flatRateByline--latest {
+    margin-left: 1px;
+  }
+
+  .DiscussionListItem-flatRateActivityDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    flex: 0 0 6px;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  .DiscussionListItem-flatRateReplyArrow {
+    width: 13px;
+    flex: 0 0 13px;
     color: var(--muted-color);
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
-    white-space: normal;
-    word-break: break-word;
+    font-size: 13px;
+    line-height: 1;
   }
 
   .DiscussionListItem-info {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 10px;
+    align-items: center;
+    gap: 5px 10px;
+    margin: 3px 0 0;
+    padding-top: 4px;
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
-    font-size: 12px;
     color: var(--muted-color);
-    margin-top: 2px;
+    font-size: 12px;
+    line-height: 1.3;
 
     > li {
       display: inline-flex;
       align-items: center;
       max-width: 100%;
     }
+
+    // Keep existing Flarum Tags markup compact. The board eyebrow above is the
+    // primary context; tags here remain the canonical footer context.
+    > .item-tags {
+      .TagsLabel {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .TagLabel {
+        border: 0;
+        border-radius: 999px !important;
+        padding: 0.12em 0.45em;
+        font-size: 11.5px;
+        line-height: 1.35;
+      }
+    }
   }
 
   .DiscussionListItem-count {
     grid-area: count;
     position: static;
-    margin: 4px 0 0;
+    margin: 2px 0 0;
     align-self: end;
     justify-self: end;
+    color: var(--muted-color);
+    font-size: 12px;
   }
 
-  // Unhide existing overflow controls on phone/touch for card rows only.
   .DiscussionListItem-controls {
     display: block;
     position: absolute;
-    top: 4px;
-    right: 4px;
+    top: -3px;
+    right: -3px;
     z-index: 2;
     opacity: 1;
 
@@ -142,6 +220,17 @@
       justify-content: center;
       min-width: 44px;
       min-height: 44px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      box-shadow: none;
+      color: var(--muted-color);
+
+      &:hover,
+      &:focus-visible {
+        background: var(--body-bg);
+        color: var(--heading-color);
+      }
     }
   }
 
@@ -154,20 +243,23 @@
   @media @phone {
     margin-left: 8px;
     margin-right: 8px;
-    padding: 10px;
+    padding: 11px 10px 10px;
 
     .DiscussionListItem-content {
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    .DiscussionListItem-controls {
-      display: block;
+      padding: 0;
+      column-gap: 8px;
     }
 
     .DiscussionListItem-main {
-      margin-right: 36px;
-      padding-right: 8px;
+      padding-right: 30px;
+    }
+
+    .DiscussionListItem-title {
+      font-size: 16.5px;
+    }
+
+    .DiscussionListItem-flatRateCover {
+      border-radius: 10px;
     }
 
     .DiscussionListItem-count {
