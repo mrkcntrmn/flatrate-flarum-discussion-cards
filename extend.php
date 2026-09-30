@@ -5,8 +5,10 @@
  */
 
 use Flarum\Api\Serializer\ForumSerializer;
+use Flarum\Api\Serializer\PostSerializer;
 use Flarum\Extend;
 use FlatRate\DiscussionCards\Api\DiscussionCardsEnabledAttribute;
+use FlatRate\DiscussionCards\Api\PostCoverImageAttribute;
 use FlatRate\DiscussionCards\RolloutGate;
 
 return [
@@ -26,4 +28,7 @@ return [
 
     (new Extend\ApiSerializer(ForumSerializer::class))
         ->attributes(DiscussionCardsEnabledAttribute::class),
+
+    (new Extend\ApiSerializer(PostSerializer::class))
+        ->attributes(PostCoverImageAttribute::class),
 ];
