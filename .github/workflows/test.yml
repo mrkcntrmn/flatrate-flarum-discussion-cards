@@ -58,6 +58,15 @@ jobs:
         working-directory: js
         run: npm run build
 
+      - name: Upload generated dist for source qualification
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-dist
+          path: |
+            js/dist/forum.js
+            js/dist/admin.js
+          if-no-files-found: error
+
       - name: JS unit tests
         run: node --test js/tests/*.test.mjs
 
