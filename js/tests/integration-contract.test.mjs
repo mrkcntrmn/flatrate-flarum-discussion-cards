@@ -126,4 +126,11 @@ test('card visual contract remains scoped and supports optional 16:9 cover', () 
   assert.ok(less.includes('object-fit: cover'));
   assert.ok(less.includes('min-width: 44px'));
   assert.ok(less.includes('min-height: 44px'));
+  assert.ok(less.includes('position: relative;'));
+  assert.ok(less.includes('.DiscussionListItem-content.unread .DiscussionListItem-title'));
+  assert.ok(less.includes('.DiscussionListItem-content.read .DiscussionListItem-title'));
+  assert.ok(less.includes('font-weight: 800;'));
+  assert.ok(less.includes('color: var(--heading-color);'));
+  assert.equal(less.includes('top: -3px'), false);
+  assert.equal(less.includes('right: -3px'), false);
 });

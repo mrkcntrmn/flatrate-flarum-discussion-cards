@@ -13,6 +13,7 @@
   background: var(--control-bg);
   box-shadow: var(--flatRate-card-shadow);
   overflow: hidden;
+  position: relative;
 
   .DiscussionListItem-content {
     display: grid;
@@ -65,7 +66,7 @@
     flex-direction: column;
     gap: 5px;
     min-width: 0;
-    padding-right: 34px;
+    padding-right: 48px;
   }
 
   .DiscussionListItem-flatRateBoard {
@@ -79,13 +80,29 @@
 
   .DiscussionListItem-title {
     margin: 0;
-    color: var(--discussion-title-color, var(--heading-color));
+    color: var(--heading-color);
     font-size: 17px;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.28;
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
+  }
+
+  // Core unread titles are 600 and read titles are normal. The card's base
+  // weight must not invert that signal. This selector stays more specific
+  // than core's `.unread .DiscussionListItem-title` rule.
+  .DiscussionListItem-content.unread .DiscussionListItem-title {
+    font-weight: 800;
+  }
+
+  // Core read titles use
+  // `.DiscussionList:not(.DiscussionList--searchResults) .read .DiscussionListItem-title`,
+  // which outranks the card title rule and substitutes the muted mix token.
+  // Keep both read and unread card titles on the heading color.
+  .DiscussionListItem-content.read .DiscussionListItem-title,
+  .DiscussionListItem-content.unread .DiscussionListItem-title {
+    color: var(--heading-color);
   }
 
   .DiscussionListItem-flatRateExcerpt {
@@ -209,9 +226,9 @@
   .DiscussionListItem-controls {
     display: block;
     position: absolute;
-    top: -3px;
-    right: -3px;
-    z-index: 2;
+    top: 2px;
+    right: 2px;
+    z-index: 3;
     opacity: 1;
 
     > .Dropdown-toggle {
@@ -251,7 +268,7 @@
     }
 
     .DiscussionListItem-main {
-      padding-right: 30px;
+      padding-right: 48px;
     }
 
     .DiscussionListItem-title {
