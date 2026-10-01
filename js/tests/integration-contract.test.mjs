@@ -110,11 +110,16 @@ test('social feed cover contract is canonical and never scrapes rendered post HT
 test('social hierarchy keeps original author distinct from latest activity', () => {
   const addCards = read('js/src/forum/addDiscussionCards.js');
   const social = read('js/src/forum/utils/socialCard.js');
+  const less = read('resources/less/forum.less');
 
   assert.ok(addCards.includes('discussion.user'));
   assert.ok(social.includes('discussion.lastPostedUser'));
   assert.ok(social.includes('discussion.lastPostedAt'));
   assert.ok(social.includes('discussion.replyCount'));
+  assert.equal(addCards.includes('DiscussionListItem-flatRateReplyArrow'), false);
+  assert.equal(addCards.includes('↳'), false);
+  assert.equal(addCards.toLowerCase().includes('replied'), false);
+  assert.equal(less.includes('DiscussionListItem-flatRateReplyArrow'), false);
 });
 
 test('card visual contract remains scoped and supports optional 16:9 cover', () => {
