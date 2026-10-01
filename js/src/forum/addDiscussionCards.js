@@ -70,7 +70,6 @@ function latestActivityVnode(discussion) {
 
   return (
     <div className="DiscussionListItem-flatRateByline DiscussionListItem-flatRateByline--latest">
-      <span className="DiscussionListItem-flatRateReplyArrow" aria-hidden="true">↳</span>
       <span className="DiscussionListItem-flatRateActivityDot" aria-hidden="true" />
       <span className="DiscussionListItem-flatRateByline-author">{username(activity.user)}</span>
       {activity.at ? (
